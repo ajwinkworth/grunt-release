@@ -33,10 +33,10 @@ module.exports = function(grunt){
     if (options.push) push();
     if (options.pushTags) pushTags();
     if (options.npm) publish();
-    if (options.config) config(newVersion);
+    if (options.config) addConfig(newVersion);
 
-    function config(NewPkgVersion) {
-      grunt.config('pkg_version', newPkgVersion);
+    function addConfig() {
+      grunt.config('pkg_version', newVersion);
     }
 
     function add(){
