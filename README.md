@@ -11,6 +11,7 @@ Releasing a new version of your killer Node lib looks like this:
 5. push the changes out to github.
 6. also push the new tag out to github.
 7. publish the new version to npm.
+8. add a config var `pkg_version` to grunt for following tasks
 
 Cool, right? No! What's wrong with you? Automate all that:
 
@@ -66,7 +67,8 @@ You can disable any of the steps if you want, by adding this to your Gruntfile:
       tag: false,
       push: false,
       pushTags: false,
-      npm: false
+      npm: false,
+      config: false
     }
   }
 ```

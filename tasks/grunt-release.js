@@ -17,7 +17,8 @@ module.exports = function(grunt){
       tag: true,
       push: true,
       pushTags: true,
-      npm : true
+      npm : true,
+      config: true
     });
 
     var pkgFile = grunt.config('pkgFile') || 'package.json';
@@ -32,6 +33,11 @@ module.exports = function(grunt){
     if (options.push) push();
     if (options.pushTags) pushTags();
     if (options.npm) publish();
+    if (options.config) config(newVersion);
+
+    function config(NewPkgVersion) {
+      grunt.config('pkg_version', newPkgVersion);
+    }
 
     function add(){
       run('git add ' + pkgFile);
