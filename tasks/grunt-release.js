@@ -22,6 +22,7 @@ module.exports = function(grunt){
       subfolder: "./"
     });
 
+    var subfolder = options.subfolder;
     var pkgFile = grunt.config('pkgFile') || subfolder + 'package.json';
     var pkg = grunt.file.readJSON(pkgFile);
     var previousVersion = pkg.version;
