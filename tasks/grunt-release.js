@@ -10,7 +10,7 @@ var shell = require('shelljs');
 
 module.exports = function(grunt){
   grunt.registerMultiTask('release', 'bump version, git tag, git push, npm publish', function(type){
-    var options = this.data.options({
+    var options = this.data.options || {
       bump: true,
       add: true,
       commit: true,
@@ -19,8 +19,7 @@ module.exports = function(grunt){
       pushTags: true,
       npm : true,
       config: true
-    });
-
+};
     var pkgFile = grunt.config('pkgFile') || 'package.json';
     var pkg = grunt.file.readJSON(pkgFile);
     var previousVersion = pkg.version;
@@ -33,10 +32,10 @@ module.exports = function(grunt){
     if (options.push) push();
     if (options.pushTags) pushTags();
     if (options.npm) publish();
-    if (options.config) config(newVersion);
+    if (options.config) addConfig(newVersion);
 
-    function config(NewPkgVersion) {
-      grunt.config('pkg_version', newPkgVersion);
+    function addConfig() {
+      grunt.config('pkg_version', newVersion);
     }
 
     function add(){
