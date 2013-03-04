@@ -10,7 +10,7 @@ var shell = require('shelljs');
 
 module.exports = function(grunt){
   grunt.registerMultiTask('release', 'bump version, git tag, git push, npm publish', function(type){
-    var options = this.data.options || {
+    var options = this.options({
       bump: true,
       add: true,
       commit: true,
@@ -18,9 +18,11 @@ module.exports = function(grunt){
       push: true,
       pushTags: true,
       npm : true,
-      config: true
-};
-    var pkgFile = grunt.config('pkgFile') || 'package.json';
+      config: true,
+      subfolder: "./"
+    });
+
+    var pkgFile = grunt.config('pkgFile') || subfolder + 'package.json';
     var pkg = grunt.file.readJSON(pkgFile);
     var previousVersion = pkg.version;
     var newVersion = pkg.version = getNextVersion(previousVersion, type);
@@ -39,23 +41,23 @@ module.exports = function(grunt){
     }
 
     function add(){
-      run('git add ' + pkgFile);
+      run('(cd '+ subfolder +' && git add .'); //+ pkgFile);
     }
 
     function commit(){
-      run('git commit ' + pkgFile + ' -m "release ' + newVersion + '"', pkgFile + ' committed');
+      run('(cd '+ subfolder +' && git commit ' + pkgFile + '-a -m "release ' + newVersion + '")', pkgFile + ' committed');
     }
 
     function tag(){
-      run('git tag ' + newVersion + ' -m "Version ' + newVersion + '"', 'New git tag created: ' + newVersion);
+      run('(cd '+ subfolder +' && git tag ' + newVersion + ' -m "Version ' + newVersion + '")', 'New git tag created: ' + newVersion);
     }
 
     function push(){
-      run('git push', 'pushed to github');
+      run('(cd '+ subfolder +' && git push grunt', 'pushed to github)');
     }
 
     function pushTags(){
-      run('git push --tags', 'pushed new tag '+ newVersion +' to github');
+      run('git push --tags grunt', 'pushed new tag '+ newVersion +' to github');
     }
 
     function publish(){
@@ -68,13 +70,13 @@ module.exports = function(grunt){
     }
 
     function push(){
-      shell.exec('git push');
+      shell.exec('(cd '+ subfolder +' && git push grunt)');
       grunt.log.ok('pushed to github');
     }
 
     // write updated package.json
     function bump(){
-      grunt.file.write(pkgFile, JSON.stringify(pkg, null, '  ') + '\n');
+      grunt.file.write(subfolder + pkgFile, JSON.stringify(pkg, null, '  ') + '\n');
       grunt.log.ok('Version bumped to ' + newVersion);
     }
 
