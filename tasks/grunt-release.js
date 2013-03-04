@@ -9,8 +9,8 @@
 var shell = require('shelljs');
 
 module.exports = function(grunt){
-  grunt.registerTask('release', 'bump version, git tag, git push, npm publish', function(type){
-    var options = this.options({
+  grunt.registerMultiTask('release', 'bump version, git tag, git push, npm publish', function(type){
+    var options = this.data.options({
       bump: true,
       add: true,
       commit: true,
