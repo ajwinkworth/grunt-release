@@ -19,13 +19,19 @@ module.exports = function(grunt){
       pushTags: true,
       npm : true,
       config: true,
+      config_var: "pkg_version",
       subfolder: "./"
     });
 
+    pwd = shell.pwd()
     var subfolder = options.subfolder;
-    var pkgFile = grunt.config('pkgFile') || subfolder + 'package.json';
+    changeDir();
+
+    var pkgFile = grunt.config('pkgFile') || 'package.json';
+    console.log(pkgFile);
     var pkg = grunt.file.readJSON(pkgFile);
     var previousVersion = pkg.version;
+    var currentVersion = previousVersion;
     var newVersion = pkg.version = getNextVersion(previousVersion, type);
 
     if (options.bump) bump();
@@ -35,34 +41,44 @@ module.exports = function(grunt){
     if (options.push) push();
     if (options.pushTags) pushTags();
     if (options.npm) publish();
-    if (options.config) addConfig(newVersion);
+    if (options.config) addConfig();
+
+    changeDirBack()
+
+    function changeDirBack() {
+      shell.cd(pwd);
+    }
 
     function addConfig() {
-      grunt.config('pkg_version', newVersion);
+      grunt.config(options.config_var, currentVersion);
+    }
+
+    function changeDir() {
+      shell.cd(subfolder);
     }
 
     function add(){
-      run('(cd '+ subfolder +' && git add .'); //+ pkgFile);
+      run('git add .'); //+ pkgFile);
     }
 
     function commit(){
-      run('(cd '+ subfolder +' && git commit ' + pkgFile + '-a -m "release ' + newVersion + '")', pkgFile + ' committed');
+      run('git commit -a -m "release ' + currentVersion + '"', pkgFile + ' committed');
     }
 
     function tag(){
-      run('(cd '+ subfolder +' && git tag ' + newVersion + ' -m "Version ' + newVersion + '")', 'New git tag created: ' + newVersion);
+      run('git tag ' + currentVersion + ' -m "Version ' + currentVersion + '"', 'New git tag created: ' + currentVersion);
     }
 
     function push(){
-      run('(cd '+ subfolder +' && git push grunt', 'pushed to github)');
+      run('git push grunt', 'pushed to remote: grunt');
     }
 
     function pushTags(){
-      run('git push --tags grunt', 'pushed new tag '+ newVersion +' to github');
+      run('git push --tags grunt', 'pushed new tag '+ currentVersion +' to remote: grunt');
     }
 
     function publish(){
-      run('npm publish', 'published '+ newVersion +' to npm');
+      run('npm publish', 'published '+ currentVersion +' to npm');
     }
 
     function run(cmd, msg){
@@ -71,14 +87,15 @@ module.exports = function(grunt){
     }
 
     function push(){
-      shell.exec('(cd '+ subfolder +' && git push grunt)');
+      shell.exec('git push grunt');
       grunt.log.ok('pushed to github');
     }
 
     // write updated package.json
     function bump(){
-      grunt.file.write(subfolder + pkgFile, JSON.stringify(pkg, null, '  ') + '\n');
+      grunt.file.write(pkgFile, JSON.stringify(pkg, null, '  ') + '\n');
       grunt.log.ok('Version bumped to ' + newVersion);
+      currentVersion = newVersion;
     }
 
     function getNextVersion (version, versionType) {

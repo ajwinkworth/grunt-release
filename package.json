@@ -17,7 +17,9 @@
     "npm",
     "git"
   ],
-  "author": "Dave Geddes",
+  "author": {
+    "name": "Dave Geddes"
+  },
   "license": "MIT",
   "dependencies": {
     "shelljs": "~0.1.2"
@@ -27,5 +29,13 @@
   },
   "peerDependencies": {
     "grunt": "~0.4.0"
-  }
+  },
+  "readme": "# grunt-release\n[Grunt](http://gruntjs.com) plugin for releasing a new version of a library, with optional publishing to npm.  \n\n## Repetition Killed the Cat\nReleasing a new version of your killer Node lib looks like this:\n\n1. bump the version in your `package.json` file.\n2. stage the package.json file's change.\n3. commit that change with a message like \"release 0.6.22\".\n4. create a new git tag for the release. \n5. push the changes out to github.\n6. also push the new tag out to github.\n7. publish the new version to npm.\n8. add a config var `pkg_version` to grunt for following tasks\n\nCool, right? No! What's wrong with you? Automate all that:\n\n```shell\ngrunt release\n```\n\nDone. No more github issues reminding you how often you forget to do one or more of the steps.\n\n## Setup\nIf you haven't used [Grunt](http://gruntjs.com/) before, be sure to check out the [Getting Started](http://gruntjs.com/getting-started) guide, as it explains how to create a [Gruntfile](http://gruntjs.com/sample-gruntfile) as well as install and use Grunt plugins. Once you're familiar with that process, you may install this plugin with this command:\n\n```shell\nnpm install grunt-release --save-dev\n```\n\nOnce the plugin has been installed, it may be enabled inside your Gruntfile with this line of JavaScript:\n\n```js\ngrunt.loadNpmTasks('grunt-release');\n```\n\n## Using grunt-release\n\n**Patch Release:**\n```shell\ngrunt release\n```\nor\n```shell\ngrunt release:patch\n```\n\n**Minor Release:**\n```shell\ngrunt release:minor\n```\n\n**Major Release:**\n```shell\ngrunt release:major\n```\n\n## Options\nYou can disable any of the steps if you want, by adding this to your Gruntfile:\n\n```js\n  release: {\n    options: {\n      bump: false,\n      add: false,\n      commit: false,\n      tag: false,\n      push: false,\n      pushTags: false,\n      npm: false,\n      config: false\n    }\n  }\n```\n\n## Credits\nInspired by Vojta Jina's [grunt-bump](https://github.com/vojtajina/grunt-bump).\n\n## License\nMIT",
+  "readmeFilename": "README.md",
+  "_id": "grunt-release@0.2.0",
+  "dist": {
+    "shasum": "006d13846cf634fedc289836aca2487cc3ec8f8d"
+  },
+  "_resolved": "git+https://github.com/ajwinkworth/grunt-release.git#da15be9c7c3cf547beba8f06590b1a399e9f5333",
+  "_from": "grunt-release@git+https://github.com/ajwinkworth/grunt-release.git#subfolder"
 }
